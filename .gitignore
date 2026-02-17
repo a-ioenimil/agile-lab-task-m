@@ -1,38 +1,39 @@
 AGENTS.md
 
-# Ignore the following files and directories
-*.log
-*.tmp
-*.bak
-*.swp
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Node
 node_modules/
 dist/
 build/
-coverage/
-.env
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE
 .idea/
 .vscode/
-*.iml
-*.sublime-project
-*.sublime-workspace
-*.pyc
-__pycache__/
-*.egg-info/
-.eggs/
-*.egg
-*.pyo
-*.pyd
-*.so
-*.dll
-*.dylib
-*.exe
-*.zip
-*.tar.gz
-*.rar
-*.7z
-*.pdf
-*.doc
-*.docx      
-
-*.venv
