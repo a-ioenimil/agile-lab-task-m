@@ -1,6 +1,5 @@
-def main():
-    print("Hello from dispatch-backend!")
+"""Compatibility module exposing the FastAPI app at repository root."""
 
+from app.main import app
 
-if __name__ == "__main__":
-    main()
+__all__ = ["app"]
