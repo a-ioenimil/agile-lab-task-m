@@ -1,17 +1,19 @@
 """User ORM model for authentication and ownership boundaries."""
 
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Column, String
+from sqlmodel import Field
 
 from app.db.base import Base
 
 
-class User(Base):
+class User(Base, table=True):
     """Application user entity."""
 
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
-    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-    full_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    id: int | None = Field(default=None, primary_key=True, index=True)
+    email: str = Field(
+        sa_column=Column(String(255), unique=True, index=True, nullable=False),
+    )
+    hashed_password: str = Field(sa_column=Column(String(255), nullable=False))
+    full_name: str = Field(sa_column=Column(String(255), nullable=False))

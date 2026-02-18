@@ -1,4 +1,4 @@
-"""SQLAlchemy ORM models for Dispatch resources."""
+"""SQLModel ORM models for Dispatch resources."""
 
 from app.models.task import Task
 from app.models.user import User

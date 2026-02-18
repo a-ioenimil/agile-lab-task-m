@@ -1,7 +1,7 @@
-"""Shared SQLAlchemy declarative base for ORM models."""
+"""Shared SQLModel base for ORM models."""
 
-from sqlalchemy.orm import DeclarativeBase
+from sqlmodel import SQLModel
 
 
-class Base(DeclarativeBase):
-    """Base class for all SQLAlchemy ORM models."""
+class Base(SQLModel):
+    """Base class for all SQLModel ORM models."""
