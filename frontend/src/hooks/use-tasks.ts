@@ -16,6 +16,7 @@ export const USERS_QUERY_KEY = ['users']
 interface UpdateTaskStatusPayload {
   taskId: number
   status: TaskStatus
+  simulateFailure?: boolean
 }
 
 interface UpdateTaskStatusContext {
@@ -48,7 +49,13 @@ export function useTasks() {
     UpdateTaskStatusPayload,
     UpdateTaskStatusContext
   >({
-    mutationFn: ({ taskId, status }) => updateTask(taskId, { status }),
+    mutationFn: async ({ taskId, status, simulateFailure }) => {
+      if (simulateFailure === true) {
+        throw new Error('Simulated task status sync failure')
+      }
+
+      return updateTask(taskId, { status })
+    },
     onMutate: async ({ taskId, status }) => {
       await queryClient.cancelQueries({ queryKey: TASKS_QUERY_KEY })
       const previousTasks = queryClient.getQueryData<TaskRecord[]>(TASKS_QUERY_KEY)

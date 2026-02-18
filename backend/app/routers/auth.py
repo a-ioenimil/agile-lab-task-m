@@ -25,7 +25,17 @@ def get_auth_service(session: Annotated[AsyncSession, Depends(get_db_session)]) 
     return AuthService(UserRepository(session))
 
 
-@router.post("/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register",
+    response_model=AuthResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Register account",
+    description="Create a new user account and return access and refresh tokens.",
+    responses={
+        201: {"description": "Account created and tokens issued."},
+        400: {"description": "Email already exists."},
+    },
+)
 async def register(
     payload: RegisterRequest,
     auth_service: Annotated[AuthService, Depends(get_auth_service)],
@@ -44,7 +54,16 @@ async def register(
     return AuthResponse(tokens=tokens, user=UserRead.model_validate(user))
 
 
-@router.post("/login", response_model=AuthResponse)
+@router.post(
+    "/login",
+    response_model=AuthResponse,
+    summary="Login account",
+    description="Authenticate user credentials and return session tokens.",
+    responses={
+        200: {"description": "Login successful and tokens issued."},
+        401: {"description": "Invalid credentials."},
+    },
+)
 async def login(
     payload: LoginRequest,
     auth_service: Annotated[AuthService, Depends(get_auth_service)],
