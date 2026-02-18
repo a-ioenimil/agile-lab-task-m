@@ -1,5 +1,7 @@
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 
+import { clearAuthSession, getAccessToken } from '@/lib/auth-session'
+
 const API_BASE_URL = 'http://localhost:8000'
 
 export const apiClient = axios.create({
@@ -7,6 +9,10 @@ export const apiClient = axios.create({
 })
 
 function onRequest(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
+  const accessToken = getAccessToken()
+  if (accessToken !== null) {
+    config.headers.Authorization = `Bearer ${accessToken}`
+  }
   return config
 }
 
@@ -19,6 +25,12 @@ function onResponse<T>(response: AxiosResponse<T>): AxiosResponse<T> {
 }
 
 function onResponseError(error: AxiosError): Promise<AxiosError> {
+  if (error.response?.status === 401) {
+    clearAuthSession()
+    if (window.location.pathname !== '/login') {
+      window.location.href = '/login'
+    }
+  }
   return Promise.reject(error)
 }
 
