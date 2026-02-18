@@ -14,7 +14,13 @@ from app.schemas.user import UserRead
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("", response_model=list[UserRead])
+@router.get(
+    "",
+    response_model=list[UserRead],
+    summary="List users",
+    description="Return users available for task assignment.",
+    responses={200: {"description": "Users returned successfully."}},
+)
 async def get_users(
     _: Annotated[User, Depends(get_current_user)],
     session: Annotated[AsyncSession, Depends(get_db_session)],
