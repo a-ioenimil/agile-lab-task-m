@@ -42,6 +42,7 @@ function DashboardPage() {
   const navigate = useNavigate()
   const { signOut, user } = useAuth()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [simulateStatusSyncFailure, setSimulateStatusSyncFailure] = useState(false)
   const { tasksQuery, usersQuery, createTaskMutation, updateTaskStatusMutation } = useTasks()
 
   const form = useForm<CreateTaskValues>({
@@ -94,7 +95,11 @@ function DashboardPage() {
   }
 
   async function onTaskStatusChange(taskId: number, nextStatus: TaskStatus): Promise<void> {
-    await updateTaskStatusMutation.mutateAsync({ taskId, status: nextStatus })
+    await updateTaskStatusMutation.mutateAsync({
+      taskId,
+      status: nextStatus,
+      simulateFailure: simulateStatusSyncFailure,
+    })
   }
 
   const taskList = tasksQuery.data ?? []
@@ -128,7 +133,22 @@ function DashboardPage() {
         </div>
 
         <section className="mt-6 space-y-4">
-          <h2 className="text-lg font-medium text-amber-50">Kanban board</h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-lg font-medium text-amber-50">Kanban board</h2>
+            {import.meta.env.DEV ? (
+              <Button
+                type="button"
+                className="h-8 bg-white/10 px-3 text-xs text-amber-100 hover:bg-white/15"
+                onClick={() => {
+                  setSimulateStatusSyncFailure((previous) => !previous)
+                }}
+              >
+                {simulateStatusSyncFailure
+                  ? 'Simulated sync failure: ON'
+                  : 'Simulated sync failure: OFF'}
+              </Button>
+            ) : null}
+          </div>
 
           {updateTaskStatusMutation.isPending ? (
             <div className="flex items-center gap-2 text-sm text-amber-100/75">
