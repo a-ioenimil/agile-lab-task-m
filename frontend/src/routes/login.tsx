@@ -15,7 +15,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { login, persistAuthSession } from '@/lib/auth'
+import { useAuth } from '@/hooks/use-auth'
+import { login } from '@/lib/auth'
 import { rootRoute } from '@/routes/__root'
 
 const loginSchema = z.object({
@@ -27,6 +28,7 @@ type LoginValues = z.infer<typeof loginSchema>
 
 function LoginPage() {
   const navigate = useNavigate()
+  const { setSession } = useAuth()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const form = useForm<LoginValues>({
@@ -41,8 +43,8 @@ function LoginPage() {
     setErrorMessage(null)
     try {
       const response = await login(values)
-      persistAuthSession(response)
-      navigate({ to: '/' })
+      setSession(response)
+      navigate({ to: '/dashboard' })
     } catch {
       setErrorMessage('Invalid credentials. Please try again.')
     }

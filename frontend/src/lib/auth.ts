@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/api'
+import { persistAuthSession } from '@/lib/auth-session'
 
 export interface AuthUser {
   id: number
@@ -38,8 +39,4 @@ export async function login(payload: LoginPayload): Promise<AuthResponse> {
   return response.data
 }
 
-export function persistAuthSession(response: AuthResponse): void {
-  localStorage.setItem('dispatch_access_token', response.tokens.access_token)
-  localStorage.setItem('dispatch_refresh_token', response.tokens.refresh_token)
-  localStorage.setItem('dispatch_user', JSON.stringify(response.user))
-}
+export { persistAuthSession }

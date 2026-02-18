@@ -15,7 +15,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { persistAuthSession, register } from '@/lib/auth'
+import { useAuth } from '@/hooks/use-auth'
+import { register } from '@/lib/auth'
 import { rootRoute } from '@/routes/__root'
 
 const registerSchema = z.object({
@@ -28,6 +29,7 @@ type RegisterValues = z.infer<typeof registerSchema>
 
 function RegisterPage() {
   const navigate = useNavigate()
+  const { setSession } = useAuth()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const form = useForm<RegisterValues>({
@@ -47,8 +49,8 @@ function RegisterPage() {
         password: values.password,
         full_name: values.fullName,
       })
-      persistAuthSession(response)
-      navigate({ to: '/' })
+      setSession(response)
+      navigate({ to: '/dashboard' })
     } catch {
       setErrorMessage('Unable to create account. Please try another email.')
     }
