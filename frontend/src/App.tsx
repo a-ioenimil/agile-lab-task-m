@@ -33,7 +33,8 @@ export function App() {
             </h1>
 
             <p className="max-w-xl text-sm text-slate-200/70">
-              This page pings the FastAPI health endpoint through the shared Axios client and React Query.
+              This page pings the FastAPI health endpoint through the shared Axios client and React
+              Query.
             </p>
           </div>
 
@@ -48,7 +49,9 @@ export function App() {
             </div>
 
             {!isError && data ? (
-              <p className="mt-2 text-xs text-amber-100/70">Response payload: status = {data.status}</p>
+              <p className="mt-2 text-xs text-amber-100/70">
+                Response payload: status = {data.status}
+              </p>
             ) : null}
           </div>
 
@@ -67,9 +70,9 @@ export function App() {
             className="h-11 w-fit bg-amber-200 text-black shadow-[0_12px_40px_rgba(252,211,77,0.35)] hover:bg-amber-200"
             onClick={() => setCount((value) => value + 1)}
           >
-          <Plus />
-          count is {count}
-        </Button>
+            <Plus />
+            count is {count}
+          </Button>
         </div>
       </div>
     </main>

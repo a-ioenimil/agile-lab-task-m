@@ -35,6 +35,9 @@ jobs:
       - name: Run lint
         run: npm run lint
 
+      - name: Run format check
+        run: npm run format:check
+
       - name: Run build
         run: npm run build
 
@@ -58,7 +61,7 @@ jobs:
         run: uv sync --locked --directory backend
 
       - name: Run backend lint
-        run: uvx ruff check backend
+        run: uv run --directory backend ruff check app
 
       - name: Run backend build checks
         run: |
