@@ -105,4 +105,7 @@ Frontend runs at `http://localhost:5173` and backend at `http://127.0.0.1:8000`.
 ## Sprint Artifacts
 
 - Sprint 0 retrospective: `docs/sprint-0-retrospective.md`
+- Sprint 1 retrospective: `docs/sprint-1-retrospective.md`
+- Sprint 2 retrospective: `docs/sprint-2-retrospective.md`
+- Sprint 2 review runbook: `docs/sprint-2-review-runbook.md`
 - Sprint plans: `sprint-0.md`, `sprint-1.md`, `sprint-2.md`

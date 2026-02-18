@@ -20,7 +20,13 @@ def get_task_service(session: Annotated[AsyncSession, Depends(get_db_session)]) 
     return TaskService(TaskRepository(session))
 
 
-@router.get("", response_model=list[TaskRead])
+@router.get(
+    "",
+    response_model=list[TaskRead],
+    summary="List tasks",
+    description="Return all tasks where the authenticated user is creator or assignee.",
+    responses={200: {"description": "Task list returned successfully."}},
+)
 async def get_tasks(
     current_user: Annotated[User, Depends(get_current_user)],
     task_service: Annotated[TaskService, Depends(get_task_service)],
@@ -30,7 +36,14 @@ async def get_tasks(
     return [TaskRead.model_validate(task) for task in tasks]
 
 
-@router.post("", response_model=TaskRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=TaskRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create task",
+    description="Create a new task owned by the authenticated user.",
+    responses={201: {"description": "Task created successfully."}},
+)
 async def create_task(
     payload: TaskCreate,
     current_user: Annotated[User, Depends(get_current_user)],
@@ -41,7 +54,17 @@ async def create_task(
     return TaskRead.model_validate(task)
 
 
-@router.put("/{task_id}", response_model=TaskRead)
+@router.put(
+    "/{task_id}",
+    response_model=TaskRead,
+    summary="Update task",
+    description="Update selected task fields such as status, priority, or assignee.",
+    responses={
+        200: {"description": "Task updated successfully."},
+        403: {"description": "Not authorized to update task."},
+        404: {"description": "Task not found."},
+    },
+)
 async def update_task(
     task_id: int,
     payload: TaskUpdate,
@@ -59,7 +82,17 @@ async def update_task(
     return TaskRead.model_validate(task)
 
 
-@router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{task_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete task",
+    description="Delete a task when requested by its creator.",
+    responses={
+        204: {"description": "Task deleted successfully."},
+        403: {"description": "Not authorized to delete task."},
+        404: {"description": "Task not found."},
+    },
+)
 async def delete_task(
     task_id: int,
     current_user: Annotated[User, Depends(get_current_user)],

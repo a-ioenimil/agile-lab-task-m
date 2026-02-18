@@ -5,7 +5,12 @@ from fastapi import APIRouter
 router = APIRouter(tags=["health"])
 
 
-@router.get("/health", summary="Health check")
+@router.get(
+    "/health",
+    summary="Health check",
+    description="Lightweight endpoint for checking backend service availability.",
+    responses={200: {"description": "Service is healthy and reachable."}},
+)
 async def health_check() -> dict[str, str]:
     """Return backend health status."""
     return {"status": "ok"}
