@@ -129,6 +129,13 @@ function DashboardPage() {
         <section className="mt-6 space-y-4">
           <h2 className="text-lg font-medium text-amber-50">Kanban board</h2>
 
+          {updateTaskStatusMutation.isPending ? (
+            <div className="flex items-center gap-2 text-sm text-amber-100/75">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Syncing board changes...
+            </div>
+          ) : null}
+
           {isLoadingTasks ? (
             <div className="grid gap-4 lg:grid-cols-3">
               {Array.from({ length: 3 }).map((_, columnIndex) => (

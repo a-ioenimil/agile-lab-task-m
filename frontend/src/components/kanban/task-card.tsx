@@ -8,6 +8,7 @@ interface TaskCardProps {
   task: TaskRecord
   index: number
   assigneeName: string
+  isDragDisabled: boolean
 }
 
 const priorityBadgeClassMap: Record<TaskPriority, string> = {
@@ -33,9 +34,9 @@ function getInitials(name: string): string {
   return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase()
 }
 
-export function TaskCard({ task, index, assigneeName }: TaskCardProps) {
+export function TaskCard({ task, index, assigneeName, isDragDisabled }: TaskCardProps) {
   return (
-    <Draggable draggableId={String(task.id)} index={index}>
+    <Draggable draggableId={String(task.id)} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (
         <article
           ref={provided.innerRef}

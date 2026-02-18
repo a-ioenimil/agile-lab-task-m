@@ -21,6 +21,7 @@ function groupTasksByStatus(tasks: TaskRecord[]): Record<TaskStatus, TaskRecord[
 
 export function KanbanBoard({ tasks, assigneeNameById, onTaskStatusChange }: KanbanBoardProps) {
   const [boardTasks, setBoardTasks] = useState<TaskRecord[]>(tasks)
+  const [isSyncingStatus, setIsSyncingStatus] = useState(false)
 
   useEffect(() => {
     setBoardTasks(tasks)
@@ -29,6 +30,10 @@ export function KanbanBoard({ tasks, assigneeNameById, onTaskStatusChange }: Kan
   const groupedTasks = useMemo(() => groupTasksByStatus(boardTasks), [boardTasks])
 
   async function handleDragEnd(result: DropResult): Promise<void> {
+    if (isSyncingStatus) {
+      return
+    }
+
     const destination = result.destination
     if (destination === null) {
       return
@@ -68,14 +73,18 @@ export function KanbanBoard({ tasks, assigneeNameById, onTaskStatusChange }: Kan
       [destinationStatus]: destinationTasks,
     }
 
+    const previousBoardTasks = boardTasks
     const nextBoardTasks = taskStatusOrder.flatMap((status) => nextGroupedTasks[status])
     setBoardTasks(nextBoardTasks)
 
     if (sourceStatus !== destinationStatus) {
+      setIsSyncingStatus(true)
       try {
         await onTaskStatusChange(updatedMovedTask.id, destinationStatus)
       } catch {
-        setBoardTasks(tasks)
+        setBoardTasks(previousBoardTasks)
+      } finally {
+        setIsSyncingStatus(false)
       }
     }
   }
@@ -94,6 +103,7 @@ export function KanbanBoard({ tasks, assigneeNameById, onTaskStatusChange }: Kan
             title={taskStatusLabelMap[status]}
             tasks={groupedTasks[status]}
             assigneeNameById={assigneeNameById}
+            isInteractionDisabled={isSyncingStatus}
           />
         ))}
       </motion.div>

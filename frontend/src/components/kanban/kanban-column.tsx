@@ -9,11 +9,18 @@ interface KanbanColumnProps {
   title: string
   tasks: TaskRecord[]
   assigneeNameById: Map<number, string>
+  isInteractionDisabled: boolean
 }
 
-export function KanbanColumn({ status, title, tasks, assigneeNameById }: KanbanColumnProps) {
+export function KanbanColumn({
+  status,
+  title,
+  tasks,
+  assigneeNameById,
+  isInteractionDisabled,
+}: KanbanColumnProps) {
   return (
-    <Droppable droppableId={status}>
+    <Droppable droppableId={status} isDropDisabled={isInteractionDisabled}>
       {(provided, snapshot) => (
         <section
           ref={provided.innerRef}
@@ -37,6 +44,7 @@ export function KanbanColumn({ status, title, tasks, assigneeNameById }: KanbanC
                   key={task.id}
                   task={task}
                   index={index}
+                  isDragDisabled={isInteractionDisabled}
                   assigneeName={
                     task.assignee_id === null
                       ? 'Unassigned'
