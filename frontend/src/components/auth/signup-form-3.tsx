@@ -3,16 +3,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import {
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  ShieldCheck,
-  Sparkles,
-  User,
-} from 'lucide-react'
+import { Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, Sparkles, User } from 'lucide-react'
 
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
@@ -128,8 +119,8 @@ export default function SignUpPage() {
                     <span className="text-amber-300">.</span>
                   </h1>
                   <p className="max-w-md text-sm text-slate-200/70">
-                    Create your account to orchestrate tasks, monitor workflow
-                    health, and stay synced with your serverless stack.
+                    Create your account to orchestrate tasks, monitor workflow health, and stay
+                    synced with your serverless stack.
                   </p>
                 </div>
               </div>
@@ -149,9 +140,7 @@ export default function SignUpPage() {
             <div className="flex flex-col justify-center border-t border-white/5 bg-black/30 p-10 lg:border-t-0 lg:border-l">
               <div className="mx-auto w-full max-w-md space-y-8">
                 <div className="fade-rise space-y-2 text-center">
-                  <h2 className="text-3xl font-semibold text-amber-50">
-                    Create your account
-                  </h2>
+                  <h2 className="text-3xl font-semibold text-amber-50">Create your account</h2>
                   <p className="text-sm text-slate-200/60">
                     Use your email and a secure password to get started.
                   </p>
@@ -220,9 +209,7 @@ export default function SignUpPage() {
                       />
                       <button
                         type="button"
-                        aria-label={
-                          showPassword ? 'Hide password' : 'Show password'
-                        }
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-100/60 transition hover:text-amber-100"
                         onClick={() => setShowPassword(!showPassword)}
                       >
@@ -239,17 +226,12 @@ export default function SignUpPage() {
                     <label className="flex items-center gap-2 text-amber-100/70">
                       <Checkbox
                         checked={acceptTerms}
-                        onCheckedChange={(checked) =>
-                          setAcceptTerms(checked === true)
-                        }
+                        onCheckedChange={(checked) => setAcceptTerms(checked === true)}
                         className="border-white/20 data-[state=checked]:bg-amber-200 data-[state=checked]:text-black"
                       />
                       I agree to the terms
                     </label>
-                    <Link
-                      to="/login"
-                      className="text-amber-200/80 transition hover:text-amber-200"
-                    >
+                    <Link to="/login" className="text-amber-200/80 transition hover:text-amber-200">
                       Already have an account?
                     </Link>
                   </div>
