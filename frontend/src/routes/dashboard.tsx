@@ -150,6 +150,21 @@ function DashboardPage() {
             ) : null}
           </div>
 
+          {import.meta.env.DEV ? (
+            <div className="rounded-lg border border-white/10 bg-black/30 p-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-amber-200/90">
+                Sprint 2 demo flow
+              </p>
+              <ol className="mt-2 list-decimal space-y-1 pl-4 text-xs text-amber-100/75">
+                <li>Create a task with the “New task” button.</li>
+                <li>Drag it from OPEN to IN_PROGRESS.</li>
+                <li>Toggle “Simulated sync failure: ON”.</li>
+                <li>Drag the same task again and verify rollback.</li>
+                <li>Turn failure OFF and retry to confirm successful sync.</li>
+              </ol>
+            </div>
+          ) : null}
+
           {updateTaskStatusMutation.isPending ? (
             <div className="flex items-center gap-2 text-sm text-amber-100/75">
               <Loader2 className="h-4 w-4 animate-spin" />
