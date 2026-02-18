@@ -71,7 +71,7 @@ Frontend runs at `http://localhost:5173` and backend at `http://127.0.0.1:8000`.
 ### Frontend
 
 1. `cd frontend`
-2. `npm install`
+2. `npm install` (installs dependencies and activates the Husky pre-commit hook for staged-file formatting)
 3. `npm run dev`
 
 ## API Documentation
