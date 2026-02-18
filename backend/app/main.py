@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 
+from app.routers.auth import router as auth_router
 from app.routers.health import router as health_router
 
 
@@ -9,6 +10,7 @@ def create_application() -> FastAPI:
     """Create and configure the FastAPI application instance."""
     application = FastAPI(title="Dispatch API", version="0.1.0")
     application.include_router(health_router)
+    application.include_router(auth_router)
     return application
 
 
