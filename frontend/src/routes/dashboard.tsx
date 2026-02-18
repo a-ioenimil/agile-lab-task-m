@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { KanbanBoard } from '@/components/kanban/kanban-board'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -15,10 +16,11 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useAuth } from '@/hooks/use-auth'
 import { useTasks } from '@/hooks/use-tasks'
 import { getAccessToken } from '@/lib/auth-session'
-import type { TaskPriority } from '@/lib/tasks'
+import type { TaskPriority, TaskStatus } from '@/lib/tasks'
 import { rootRoute } from '@/routes/__root'
 
 const createTaskSchema = z.object({
@@ -40,7 +42,7 @@ function DashboardPage() {
   const navigate = useNavigate()
   const { signOut, user } = useAuth()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const { tasksQuery, usersQuery, createTaskMutation } = useTasks()
+  const { tasksQuery, usersQuery, createTaskMutation, updateTaskStatusMutation } = useTasks()
 
   const form = useForm<CreateTaskValues>({
     resolver: zodResolver(createTaskSchema),
@@ -91,14 +93,18 @@ function DashboardPage() {
     closeCreateTaskDialog()
   }
 
+  async function onTaskStatusChange(taskId: number, nextStatus: TaskStatus): Promise<void> {
+    await updateTaskStatusMutation.mutateAsync({ taskId, status: nextStatus })
+  }
+
   const taskList = tasksQuery.data ?? []
-  const isLoadingTasks = tasksQuery.isLoading || usersQuery.isLoading
+  const isLoadingTasks = tasksQuery.isPending || usersQuery.isPending
   const hasTaskLoadError = tasksQuery.isError || usersQuery.isError
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#0b0b0d] p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(252,211,77,0.2),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(245,158,11,0.2),transparent_45%)]" />
-      <div className="relative z-10 mx-auto w-full max-w-4xl rounded-[24px] border border-white/10 bg-[#111114]/85 p-8 shadow-[0_30px_100px_rgba(0,0,0,0.55)]">
+      <div className="relative z-10 mx-auto w-full max-w-6xl rounded-[24px] border border-white/10 bg-[#111114]/85 p-8 shadow-[0_30px_100px_rgba(0,0,0,0.55)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-3xl font-semibold text-amber-50">Dashboard</h1>
@@ -121,13 +127,34 @@ function DashboardPage() {
           </div>
         </div>
 
-        <section className="mt-6 space-y-3">
-          <h2 className="text-lg font-medium text-amber-50">My tasks</h2>
+        <section className="mt-6 space-y-4">
+          <h2 className="text-lg font-medium text-amber-50">Kanban board</h2>
+
+          {updateTaskStatusMutation.isPending ? (
+            <div className="flex items-center gap-2 text-sm text-amber-100/75">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Syncing board changes...
+            </div>
+          ) : null}
 
           {isLoadingTasks ? (
-            <div className="flex items-center gap-2 text-sm text-amber-100/70">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Loading tasks...
+            <div className="grid gap-4 lg:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, columnIndex) => (
+                <div
+                  key={`skeleton-column-${columnIndex}`}
+                  className="rounded-xl border border-white/10 bg-black/30 p-3"
+                >
+                  <Skeleton className="mb-3 h-4 w-24" />
+                  <div className="space-y-3">
+                    {Array.from({ length: 2 }).map((_, cardIndex) => (
+                      <Skeleton
+                        key={`skeleton-card-${columnIndex}-${cardIndex}`}
+                        className="h-24 rounded-lg border border-white/10 bg-white/5"
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           ) : null}
 
@@ -135,36 +162,16 @@ function DashboardPage() {
             <p className="text-sm text-red-300">Unable to load tasks right now.</p>
           ) : null}
 
-          {!isLoadingTasks && !hasTaskLoadError && taskList.length === 0 ? (
-            <p className="rounded-lg border border-white/10 bg-black/30 p-4 text-sm text-amber-100/70">
-              No tasks yet. Create your first task.
-            </p>
+          {!isLoadingTasks && !hasTaskLoadError ? (
+            <KanbanBoard
+              tasks={taskList}
+              assigneeNameById={userNameById}
+              onTaskStatusChange={onTaskStatusChange}
+            />
           ) : null}
 
-          {!isLoadingTasks && !hasTaskLoadError && taskList.length > 0 ? (
-            <div className="grid gap-3 md:grid-cols-2">
-              {taskList.map((task) => (
-                <article
-                  key={task.id}
-                  className="rounded-lg border border-white/10 bg-black/30 p-4"
-                >
-                  <h3 className="text-base font-medium text-amber-50">{task.title}</h3>
-                  <p className="mt-1 text-sm text-amber-100/70">
-                    {task.description ?? 'No description'}
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-amber-100/80">
-                    <span className="rounded bg-white/10 px-2 py-1">Status: {task.status}</span>
-                    <span className="rounded bg-white/10 px-2 py-1">Priority: {task.priority}</span>
-                    <span className="rounded bg-white/10 px-2 py-1">
-                      Assignee:{' '}
-                      {task.assignee_id
-                        ? (userNameById.get(task.assignee_id) ?? 'Unknown')
-                        : 'Unassigned'}
-                    </span>
-                  </div>
-                </article>
-              ))}
-            </div>
+          {updateTaskStatusMutation.isError ? (
+            <p className="text-sm text-red-300">Task update failed. Board has been restored.</p>
           ) : null}
         </section>
       </div>

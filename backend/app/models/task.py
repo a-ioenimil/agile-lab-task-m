@@ -2,8 +2,8 @@
 
 import enum
 
-from sqlalchemy import Enum, ForeignKey, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Column, Enum, ForeignKey, String, Text
+from sqlmodel import Field
 
 from app.db.base import Base
 
@@ -24,26 +24,26 @@ class TaskPriority(str, enum.Enum):
     HIGH = "high"
 
 
-class Task(Base):
+class Task(Base, table=True):
     """Task entity representing work items in Dispatch."""
 
     __tablename__ = "tasks"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    title: Mapped[str] = mapped_column(String(255), nullable=False)
-    description: Mapped[str | None] = mapped_column(Text(), nullable=True)
-    status: Mapped[TaskStatus] = mapped_column(
-        Enum(TaskStatus, name="task_status"),
+    id: int | None = Field(default=None, primary_key=True, index=True)
+    title: str = Field(sa_column=Column(String(255), nullable=False))
+    description: str | None = Field(default=None, sa_column=Column(Text(), nullable=True))
+    status: TaskStatus = Field(
         default=TaskStatus.TODO,
-        nullable=False,
+        sa_column=Column(Enum(TaskStatus, name="task_status"), nullable=False),
     )
-    priority: Mapped[TaskPriority] = mapped_column(
-        Enum(TaskPriority, name="task_priority"),
+    priority: TaskPriority = Field(
         default=TaskPriority.MEDIUM,
-        nullable=False,
+        sa_column=Column(Enum(TaskPriority, name="task_priority"), nullable=False),
     )
-    creator_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
+    creator_id: int = Field(
+        sa_column=Column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
     )
-    assignee_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    assignee_id: int | None = Field(
+        default=None,
+        sa_column=Column(ForeignKey("users.id"), nullable=True),
+    )
