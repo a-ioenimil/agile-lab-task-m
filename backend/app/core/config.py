@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     postgres_host: str = "localhost"
     postgres_port: int = 5432
     sqlalchemy_echo: bool = False
+    jwt_access_secret_key: str = "dispatch_access_secret_change_me"
+    jwt_refresh_secret_key: str = "dispatch_refresh_secret_change_me"
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+    refresh_token_expire_days: int = 7
 
     model_config = SettingsConfigDict(
         env_file="../.env",
