@@ -44,6 +44,20 @@ jobs:
   backend:
     name: Backend Lint and Build
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: dispatch_user
+          POSTGRES_PASSWORD: dispatch_password
+          POSTGRES_DB: dispatch_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -67,3 +81,6 @@ jobs:
         run: |
           uv run --directory backend python -m compileall app
           uv run --directory backend python -c "from app.main import app; print(app.title)"
+
+      - name: Run backend tests
+        run: uv run --directory backend pytest

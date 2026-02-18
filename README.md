@@ -102,6 +102,19 @@ Frontend runs at `http://localhost:5173` and backend at `http://127.0.0.1:8000`.
 - Build: `cd frontend && npm run build`
 - Format check: `cd frontend && npm run format:check`
 
+## Testing
+
+### Backend
+
+1. Ensure Postgres is running:
+   - `docker compose up -d postgres`
+2. Run tests:
+   - `cd backend && uv run pytest`
+
+To run specific tests:
+- `cd backend && uv run pytest tests/services/test_auth_service.py`
+
+
 ## Sprint Artifacts
 
 - Sprint 0 retrospective: `docs/sprint-0-retrospective.md`
