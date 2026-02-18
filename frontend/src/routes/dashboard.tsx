@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useAuth } from '@/hooks/use-auth'
 import { useTasks } from '@/hooks/use-tasks'
 import { getAccessToken } from '@/lib/auth-session'
@@ -143,12 +144,12 @@ function DashboardPage() {
                   key={`skeleton-column-${columnIndex}`}
                   className="rounded-xl border border-white/10 bg-black/30 p-3"
                 >
-                  <div className="mb-3 h-4 w-24 animate-pulse rounded bg-white/10" />
+                  <Skeleton className="mb-3 h-4 w-24" />
                   <div className="space-y-3">
                     {Array.from({ length: 2 }).map((_, cardIndex) => (
-                      <div
+                      <Skeleton
                         key={`skeleton-card-${columnIndex}-${cardIndex}`}
-                        className="h-24 animate-pulse rounded-lg border border-white/10 bg-white/5"
+                        className="h-24 rounded-lg border border-white/10 bg-white/5"
                       />
                     ))}
                   </div>

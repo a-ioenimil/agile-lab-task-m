@@ -2,7 +2,12 @@ import { motion } from 'framer-motion'
 import { Draggable } from '@hello-pangea/dnd'
 
 import { cn } from '@/lib/utils'
-import type { TaskPriority, TaskRecord } from '@/lib/tasks'
+import {
+  taskStatusLabelMap,
+  type TaskPriority,
+  type TaskRecord,
+  type TaskStatus,
+} from '@/lib/tasks'
 
 interface TaskCardProps {
   task: TaskRecord
@@ -15,6 +20,12 @@ const priorityBadgeClassMap: Record<TaskPriority, string> = {
   high: 'bg-red-400/15 text-red-200',
   medium: 'bg-amber-300/20 text-amber-100',
   low: 'bg-blue-400/20 text-blue-100',
+}
+
+const statusBadgeClassMap: Record<TaskStatus, string> = {
+  todo: 'bg-slate-300/20 text-slate-100',
+  in_progress: 'bg-amber-300/20 text-amber-100',
+  done: 'bg-emerald-300/20 text-emerald-100',
 }
 
 function getInitials(name: string): string {
@@ -56,14 +67,24 @@ export function TaskCard({ task, index, assigneeName, isDragDisabled }: TaskCard
           >
             <div className="flex items-start justify-between gap-3">
               <h3 className="text-sm font-medium text-amber-50">{task.title}</h3>
-              <span
-                className={cn(
-                  'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
-                  priorityBadgeClassMap[task.priority],
-                )}
-              >
-                {task.priority}
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span
+                  className={cn(
+                    'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                    statusBadgeClassMap[task.status],
+                  )}
+                >
+                  {taskStatusLabelMap[task.status]}
+                </span>
+                <span
+                  className={cn(
+                    'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                    priorityBadgeClassMap[task.priority],
+                  )}
+                >
+                  {task.priority}
+                </span>
+              </div>
             </div>
 
             <p className="mt-2 text-xs text-amber-100/70">{task.description ?? 'No description'}</p>
