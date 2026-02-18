@@ -152,7 +152,7 @@ We used a simplified Git flow:
 *   Feature branches (e.g., `feat/auth-setup`): Created for individual stories and merged back via Pull Request (simulated).
 
 **GitLens Visualization:**
-![Branching Strategy Visualization](INSERT_IMAGE_URL_HERE)
+![Branching Strategy Visualization](assets/images/git-lense.png)
 *Placeholder: Insert GitLens screenshot URL showing the branching history here.*
 
 ---
