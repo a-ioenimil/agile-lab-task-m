@@ -279,8 +279,8 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: dispatch_user
-          POSTGRES_PASSWORD: dispatch_password
+          POSTGRES_USER: ******
+          POSTGRES_PASSWORD: ******
           POSTGRES_DB: dispatch_db
         ports:
           - 5432:5432
